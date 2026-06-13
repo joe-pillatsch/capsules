@@ -119,23 +119,14 @@ html[data-theme="light"] body::after{mix-blend-mode:normal;opacity:calc(var(--sc
   border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:space-between;
   gap:8px;padding:14px 10px 12px;cursor:pointer;color:var(--ink);position:relative;
   transition:transform .18s ease, border-color .18s ease, box-shadow .25s ease, background .25s ease}
-.tile-chain{position:absolute;top:8px;right:9px;font-size:11px;line-height:1;color:var(--accent);
-  opacity:.8}
 .tile:hover{transform:translateY(-5px);border-color:var(--c);
   background:color-mix(in srgb, var(--c) 9%, var(--panel));
   box-shadow:0 16px 34px -14px var(--c)}
 .tile-art{flex:1;display:flex;align-items:center;justify-content:center}
 .tile-art img{filter:drop-shadow(0 6px 8px rgba(0,0,0,.35))}
 .tile-meta{display:flex;flex-direction:column;align-items:center;gap:2px;text-align:center}
-.t-num{font-family:"Space Mono",monospace;font-size:10.5px;letter-spacing:.12em;color:var(--dim)}
 .t-name{font-size:13px;font-weight:600;line-height:1.1}
 .t-hex{font-family:"Space Mono",monospace;font-size:10.5px;margin-top:1px}
-.tile-missing{justify-content:center;gap:10px;border-style:dashed;cursor:default;
-  background:
-    repeating-linear-gradient(45deg, transparent 0 7px, color-mix(in srgb,var(--accent) 10%, transparent) 7px 8px),
-    var(--panel)}
-.miss-mark{font-family:"Press Start 2P",monospace;font-size:10px;line-height:1.5;
-  text-align:center;color:var(--accent);opacity:.85}
 
 /* lightbox */
 .lb{position:fixed;inset:0;z-index:80;display:flex;align-items:center;justify-content:center;
@@ -163,8 +154,6 @@ html[data-theme="light"] body::after{mix-blend-mode:normal;opacity:calc(var(--sc
   font-size:13px;font-weight:700;text-decoration:none;letter-spacing:.03em;
   transition:transform .15s, filter .15s}
 .lb-chain:hover{transform:translateY(-2px);filter:brightness(1.08)}
-.lb-chain.pending{background:var(--panel2);color:var(--dim);border:1px dashed var(--line2);cursor:default}
-.lb-chain.pending:hover{transform:none;filter:none}
 .lb-arrow{position:absolute;top:50%;transform:translateY(-50%);width:42px;height:42px;
   border-radius:50%;border:1px solid var(--line2);background:var(--panel2);color:var(--ink);
   font-size:22px;cursor:pointer;display:flex;align-items:center;justify-content:center;
@@ -611,13 +600,9 @@ window.shortId = function (n) {
 const { useState, useEffect, useMemo, useRef } = React;
 
 const ALL = Array.from({ length: 151 }, (_, i) => i + 1);
-const AVAIL = ALL;                          // all 151 are inscribed on-chain
-const NO_LOCAL = new Set([]);               // all sprites available locally in images/
+const AVAIL = ALL;
 const pad = (n) => String(n).padStart(3, '0');
-const artSrc = (n) =>
-  (window.SPRITES && window.SPRITES[n])
-    ? window.SPRITES[n]
-    : (NO_LOCAL.has(n) ? window.inscriptionContent(n) : `images/${n}.png`);
+const artSrc = (n) => window.SPRITES?.[n] || `images/${n}.png`;
 
 // Settings baked in from the configuration chosen in the editor. This is a
 // static build: there is no Tweaks panel and these values cannot be changed
@@ -754,15 +739,12 @@ function Spectrum({ colors, ready, onPick }) {
 /* ------------------------------------------------------------------ atlas */
 function Tile({ n, t, colors, onOpen }) {
   const color = colors[n] || '#3a3a44';
-  const onChain = NO_LOCAL.has(n);
   return (
     <button
       className="tile"
       style={{ minHeight: t.tile, '--c': color, boxShadow: t.glow ? undefined : 'none' }}
       onClick={() => onOpen(n)}
-      title={onChain ? 'served byte-perfect from Bitcoin' : undefined}
     >
-      {onChain && <span className="tile-chain" title="rendered from the on-chain inscription">⛓</span>}
       <div className="tile-art">
         <img className="px" src={artSrc(n)} alt={`№ ${pad(n)}`} style={{ width: t.tile * 0.52, height: t.tile * 0.52 }} />
       </div>

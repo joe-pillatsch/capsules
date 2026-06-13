@@ -63,13 +63,10 @@ directly. Valid ranges/options:
 
 - **Indexing is 1..151**; numbers zero-pad to 3 digits via `pad(n)` for the
   `№ 001` labels.
-- **Sprites are external.** Art resolves as
-  `window.SPRITES[n] || (NO_LOCAL.has(n) ? inscriptionContent(n) : "images/"+n+".png")`.
-  `window.SPRITES` is not defined here, so it loads `images/{n}.png` relatively —
-  **`index.html` depends on the `images/` folder next to it.** Don't delete it.
-- **#53** is in `NO_LOCAL`, so it loads from `ordinals.com` (on-chain) and needs
-  network — even though `images/53.png` also exists. To make it fully local,
-  remove `53` from the `NO_LOCAL` set.
+- **Sprites are external.** Art resolves as `window.SPRITES?.[n] || "images/"+n+".png"`.
+  `window.SPRITES` is not defined in this context, so every sprite loads from
+  `images/{n}.png` — **`index.html` depends on the `images/` folder next to it.**
+  Don't delete it.
 - Dome colors + inscription ids are **baked into the inline scripts** —
   authoritative, no runtime pixel sampling. `extractDomeColor` is kept for
   regenerating that data, not used on the render path.
