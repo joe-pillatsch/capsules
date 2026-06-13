@@ -1,0 +1,917 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Capsules — An Atlas of 151 Colors</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg" />
+<link rel="icon" type="image/png" sizes="32x32" href="favicon.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+<style>
+:root{
+  --accent:#e8513a; --scan:1;
+  --bg:#09090e; --bg2:#0e0e16; --panel:#14141e; --panel2:#1a1a26;
+  --ink:#f1eee4; --dim:#83838f; --line:rgba(255,255,255,.08); --line2:rgba(255,255,255,.16);
+  --ball-white:#f2f2f4; --ball-dark:#141418;
+}
+html[data-theme="light"]{
+  --bg:#e9e7dd; --bg2:#f3f1e9; --panel:#ffffff; --panel2:#f7f5ee;
+  --ink:#17171f; --dim:#6c6c76; --line:rgba(0,0,0,.10); --line2:rgba(0,0,0,.18);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--bg);color:var(--ink)}
+body{
+  font-family:"Space Grotesk",system-ui,sans-serif;
+  -webkit-font-smoothing:antialiased;
+  background:
+    radial-gradient(1200px 600px at 50% -10%, var(--bg2), transparent 70%),
+    var(--bg);
+  min-height:100vh;
+}
+body::after{
+  content:"";position:fixed;inset:0;pointer-events:none;z-index:60;
+  opacity:calc(var(--scan)*.5);
+  background:repeating-linear-gradient(to bottom, rgba(0,0,0,.16) 0 1px, transparent 1px 3px);
+  mix-blend-mode:multiply;
+}
+html[data-theme="light"] body::after{mix-blend-mode:normal;opacity:calc(var(--scan)*.22)}
+.px{image-rendering:pixelated;image-rendering:crisp-edges;display:block}
+.dim{color:var(--dim)}
+.page{max-width:1320px;margin:0 auto;padding:0 28px 80px}
+
+/* masthead */
+.masthead{
+  display:flex;justify-content:space-between;align-items:flex-end;gap:32px;
+  padding:40px 0 26px;border-bottom:1px solid var(--line);flex-wrap:wrap;
+}
+.wordmark{
+  font-family:"Press Start 2P",monospace;font-size:clamp(20px,3.4vw,40px);
+  line-height:1;letter-spacing:1px;
+  background:linear-gradient(180deg,var(--ink),color-mix(in srgb,var(--ink) 55%, var(--accent)));
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+.wordmark.sm{font-size:14px}
+.tagline{margin-top:14px;max-width:560px;color:var(--dim);font-size:15px;line-height:1.5}
+.tagline em{color:var(--ink);font-style:normal;font-weight:600;box-shadow:inset 0 -1px 0 var(--accent)}
+.stats{display:flex;gap:26px}
+.stat{display:flex;flex-direction:column;align-items:flex-end;line-height:1}
+.stat b{font-family:"Space Mono",monospace;font-size:26px;font-weight:700}
+.stat.wide b{font-size:15px;letter-spacing:.01em}
+.stat span{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--dim);margin-top:6px}
+
+/* hero */
+.hero{
+  position:relative;display:flex;flex-direction:column;align-items:center;
+  padding:74px 0 64px;overflow:hidden;
+}
+.hero-glow{
+  position:absolute;width:760px;height:760px;border-radius:50%;
+  filter:blur(34px);opacity:.55;transition:background .5s linear;z-index:0;
+  top:50%;left:50%;transform:translate(-50%,-46%);
+}
+.hero-stage{position:relative;z-index:1;display:flex;align-items:center;justify-content:center}
+.hero-sprite{filter:drop-shadow(0 18px 26px rgba(0,0,0,.45))}
+@keyframes fadein{from{opacity:.0}to{opacity:1}}
+.fadein{animation:fadein .55s ease both}
+.strip-window{position:relative;overflow:hidden;display:flex;align-items:center;
+  -webkit-mask:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent);
+          mask:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent)}
+.strip-track{display:flex;align-items:center;gap:14px;animation:marquee 26s linear infinite}
+.strip-track img{filter:drop-shadow(0 10px 14px rgba(0,0,0,.4))}
+@keyframes marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+.readout{margin-top:34px;text-align:center;z-index:1}
+.ro-num{font-family:"Space Mono",monospace;color:var(--dim);font-size:13px;letter-spacing:.28em}
+.ro-name{font-size:30px;font-weight:700;margin-top:4px;letter-spacing:-.01em}
+.ro-hex{font-family:"Space Mono",monospace;font-size:14px;margin-top:10px;color:var(--dim);
+  display:inline-flex;align-items:center;gap:9px}
+.chip{width:14px;height:14px;border-radius:3px;box-shadow:0 0 0 1px var(--line2)}
+
+/* css ball (morph) */
+.cssball{position:relative;border-radius:50%;overflow:hidden;
+  box-shadow:inset 0 0 0 3px rgba(0,0,0,.22), 0 22px 30px -12px rgba(0,0,0,.6)}
+.cb-top{position:absolute;top:0;left:0;right:0;transition:background .5s linear}
+.cb-bot{position:absolute;bottom:0;left:0;right:0;background:var(--ball-white)}
+.cb-band{position:absolute;left:0;right:0;background:var(--ball-dark)}
+.cb-btn{position:absolute;border-radius:50%;background:var(--ball-white);
+  border-style:solid;border-color:var(--ball-dark);
+  box-shadow:0 0 0 2px var(--ball-white), inset 0 1px 2px rgba(0,0,0,.25)}
+
+/* band labels */
+.band-label{display:flex;justify-content:space-between;align-items:baseline;gap:18px;
+  margin:46px 0 16px;padding-bottom:10px;border-bottom:1px solid var(--line);flex-wrap:wrap}
+.band-label>span:first-child{font-family:"Space Mono",monospace;font-weight:700;
+  letter-spacing:.26em;font-size:13px}
+.band-label .dim{font-size:12px;letter-spacing:.04em}
+
+/* spectrum */
+.spectrum{display:flex;width:100%;height:76px;border-radius:10px;overflow:hidden;
+  border:1px solid var(--line);box-shadow:0 10px 30px -16px rgba(0,0,0,.6)}
+.spec-stripe{flex:1 1 0;border:0;padding:0;cursor:pointer;
+  transition:flex-grow .28s cubic-bezier(.2,.7,.2,1);position:relative}
+.spec-stripe:hover{flex-grow:5;z-index:2;box-shadow:0 0 0 1px var(--line2)}
+
+/* atlas */
+.atlas{display:grid;gap:12px;margin-top:4px}
+.tile{appearance:none;border:1px solid var(--line);background:var(--panel);
+  border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:space-between;
+  gap:8px;padding:14px 10px 12px;cursor:pointer;color:var(--ink);position:relative;
+  transition:transform .18s ease, border-color .18s ease, box-shadow .25s ease, background .25s ease}
+.tile-chain{position:absolute;top:8px;right:9px;font-size:11px;line-height:1;color:var(--accent);
+  opacity:.8}
+.tile:hover{transform:translateY(-5px);border-color:var(--c);
+  background:color-mix(in srgb, var(--c) 9%, var(--panel));
+  box-shadow:0 16px 34px -14px var(--c)}
+.tile-art{flex:1;display:flex;align-items:center;justify-content:center}
+.tile-art img{filter:drop-shadow(0 6px 8px rgba(0,0,0,.35))}
+.tile-meta{display:flex;flex-direction:column;align-items:center;gap:2px;text-align:center}
+.t-num{font-family:"Space Mono",monospace;font-size:10.5px;letter-spacing:.12em;color:var(--dim)}
+.t-name{font-size:13px;font-weight:600;line-height:1.1}
+.t-hex{font-family:"Space Mono",monospace;font-size:10.5px;margin-top:1px}
+.tile-missing{justify-content:center;gap:10px;border-style:dashed;cursor:default;
+  background:
+    repeating-linear-gradient(45deg, transparent 0 7px, color-mix(in srgb,var(--accent) 10%, transparent) 7px 8px),
+    var(--panel)}
+.miss-mark{font-family:"Press Start 2P",monospace;font-size:10px;line-height:1.5;
+  text-align:center;color:var(--accent);opacity:.85}
+
+/* lightbox */
+.lb{position:fixed;inset:0;z-index:80;display:flex;align-items:center;justify-content:center;
+  padding:24px;background:rgba(5,5,9,.8);backdrop-filter:blur(8px);animation:fadein .2s ease both}
+.lb-card{position:relative;width:min(720px,94vw);background:var(--panel);
+  border:1px solid var(--line2);border-radius:20px;padding:30px;
+  box-shadow:0 40px 90px -30px rgba(0,0,0,.8)}
+.lb-body{display:grid;grid-template-columns:1fr 1fr;gap:26px;align-items:center}
+.lb-art{aspect-ratio:1;border-radius:14px;display:flex;align-items:center;justify-content:center;
+  background:var(--panel2)}
+.lb-art img{width:64%;height:64%;image-rendering:pixelated}
+.lb-num{font-family:"Space Mono",monospace;color:var(--dim);font-size:13px;letter-spacing:.2em}
+.lb-name{font-size:34px;font-weight:700;margin:4px 0 18px;letter-spacing:-.015em}
+.lb-swatch-row{display:flex;align-items:center;gap:14px;margin-bottom:18px}
+.lb-swatch{width:46px;height:46px;border-radius:10px;box-shadow:0 0 0 1px var(--line2)}
+.lb-hex{font-family:"Space Mono",monospace;font-size:16px;font-weight:700}
+.lb-sub{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);margin-top:3px}
+.lb-insc{display:flex;align-items:center;gap:10px;margin-bottom:16px;padding:9px 12px;
+  border:1px solid var(--line);border-radius:9px;background:var(--panel2)}
+.lb-insc-k{font-family:"Space Mono",monospace;font-size:9.5px;letter-spacing:.18em;color:var(--dim)}
+.lb-insc-v{font-family:"Space Mono",monospace;font-size:13px;font-weight:700;letter-spacing:.02em}
+.lb-blurb{color:var(--dim);font-size:14px;line-height:1.55;max-width:34ch}
+.lb-chain{display:inline-flex;align-items:center;gap:8px;margin-top:18px;padding:11px 16px;
+  border-radius:10px;background:var(--accent);color:#fff;font-family:"Space Mono",monospace;
+  font-size:13px;font-weight:700;text-decoration:none;letter-spacing:.03em;
+  transition:transform .15s, filter .15s}
+.lb-chain:hover{transform:translateY(-2px);filter:brightness(1.08)}
+.lb-chain.pending{background:var(--panel2);color:var(--dim);border:1px dashed var(--line2);cursor:default}
+.lb-chain.pending:hover{transform:none;filter:none}
+.lb-arrow{position:absolute;top:50%;transform:translateY(-50%);width:42px;height:42px;
+  border-radius:50%;border:1px solid var(--line2);background:var(--panel2);color:var(--ink);
+  font-size:22px;cursor:pointer;display:flex;align-items:center;justify-content:center;
+  transition:background .15s, transform .15s}
+.lb-arrow:hover{background:var(--accent);color:#fff;border-color:var(--accent)}
+.lb-arrow.left{left:-14px}.lb-arrow.right{right:-14px}
+.lb-close{position:absolute;top:14px;right:16px;background:none;border:0;color:var(--dim);
+  font-size:16px;cursor:pointer;line-height:1}
+.lb-close:hover{color:var(--ink)}
+
+/* footer */
+.foot{display:flex;align-items:center;gap:16px;margin-top:60px;padding-top:24px;
+  border-top:1px solid var(--line);flex-wrap:wrap}
+.foot .dim{font-size:13px}
+
+@media(max-width:640px){
+  .masthead{align-items:flex-start}
+  .stats{gap:18px}.stat b{font-size:20px}
+  .lb-body{grid-template-columns:1fr}.lb-art{max-width:60%;margin:0 auto}
+  .lb-arrow.left{left:6px}.lb-arrow.right{right:6px}
+}
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<!-- React + Babel from CDN. Babel transpiles the JSX in the <script type="text/babel"> below at load. -->
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js"></script>
+
+<!-- Data + helpers (plain JS, attach to window) -->
+<script>
+// Dome-color extraction. The art is a Pokeball whose TOP DOME is recolored per
+// creature; the lower half / band / button are structural white/black/grey.
+// We sample the top ~46% of the sprite, skip transparent + near-black outline
+// pixels, and average the rest. This returns the true dome color even for
+// pale/grey creatures (where a saturation filter would fail).
+window.extractDomeColor = function (img) {
+  const w = img.naturalWidth || 32, h = img.naturalHeight || 32;
+  const c = document.createElement('canvas');
+  c.width = w; c.height = h;
+  const ctx = c.getContext('2d', { willReadFrequently: true });
+  ctx.drawImage(img, 0, 0, w, h);
+  let data;
+  try { data = ctx.getImageData(0, 0, w, h).data; }
+  catch (e) { return '#888888'; }
+
+  const domeRows = Math.round(h * 0.46);
+  let r = 0, g = 0, b = 0, n = 0;
+  for (let y = 0; y < domeRows; y++) {
+    for (let x = 0; x < w; x++) {
+      const i = (y * w + x) * 4;
+      const a = data[i + 3];
+      if (a < 200) continue;                 // transparent corner
+      const R = data[i], G = data[i + 1], B = data[i + 2];
+      const lum = (R + G + B) / 3;
+      if (lum < 28) continue;                // dark outline
+      r += R; g += G; b += B; n++;
+    }
+  }
+  if (n === 0) return '#888888';
+  return rgbToHex(Math.round(r / n), Math.round(g / n), Math.round(b / n));
+};
+
+function rgbToHex(r, g, b) {
+  const h = (v) => v.toString(16).padStart(2, '0');
+  return '#' + h(r) + h(g) + h(b);
+}
+window.rgbToHex = rgbToHex;
+
+// Perceptual hue for sorting the spectrum (HSL hue + a luma tiebreak).
+window.colorSortKey = function (hex) {
+  const r = parseInt(hex.slice(1, 3), 16) / 255;
+  const g = parseInt(hex.slice(3, 5), 16) / 255;
+  const b = parseInt(hex.slice(5, 7), 16) / 255;
+  const max = Math.max(r, g, b), min = Math.min(r, g, b);
+  const l = (max + min) / 2;
+  let h = 0, s = 0;
+  if (max !== min) {
+    const d = max - min;
+    s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+    if (max === r) h = ((g - b) / d + (g < b ? 6 : 0));
+    else if (max === g) h = (b - r) / d + 2;
+    else h = (r - g) / d + 4;
+    h /= 6;
+  }
+  // push near-greys to the end, ordered by lightness
+  if (s < 0.12) return 1000 + l;
+  return h * 360 + (1 - s) * 0.0001;
+};
+
+// Readable text color on a given background.
+window.contrastInk = function (hex) {
+  const r = parseInt(hex.slice(1, 3), 16);
+  const g = parseInt(hex.slice(3, 5), 16);
+  const b = parseInt(hex.slice(5, 7), 16);
+  const yiq = (r * 299 + g * 587 + b * 114) / 1000;
+  return yiq >= 150 ? '#10101a' : '#f5f3ec';
+};
+</script>
+<script>
+// AUTO-GENERATED from the Capsules inscription sheet. Do not hand-edit.
+// Every ball is inscribed byte-perfect on Bitcoin (Ordinals).
+// Authoritative dome color + full inscription id, keyed by national dex number (1..151).
+
+window.DOME_COLORS = {
+  1: "#399494",
+  2: "#209483",
+  3: "#20b49c",
+  4: "#ff9441",
+  5: "#cd3939",
+  6: "#ee8329",
+  7: "#5a9ca4",
+  8: "#8bacf6",
+  9: "#5a8bcd",
+  10: "#31ac41",
+  11: "#6a8b5a",
+  12: "#eeeeff",
+  13: "#cd7310",
+  14: "#cd9c10",
+  15: "#ffffff",
+  16: "#a4625a",
+  17: "#ffe68b",
+  18: "#e6b462",
+  19: "#b473bd",
+  20: "#a47329",
+  21: "#ee524a",
+  22: "#b47320",
+  23: "#cd62b4",
+  24: "#a483c5",
+  25: "#f6e652",
+  26: "#f6ac29",
+  27: "#cdb400",
+  28: "#8b6218",
+  29: "#d5d5ff",
+  30: "#8bc5cd",
+  31: "#628bac",
+  32: "#bd62c5",
+  33: "#945ab4",
+  34: "#a45294",
+  35: "#ffd5bd",
+  36: "#ffc5b4",
+  37: "#e6946a",
+  38: "#e6c552",
+  39: "#ffaca4",
+  40: "#ffffff",
+  41: "#8bb4ee",
+  42: "#ac52ac",
+  43: "#8bac31",
+  44: "#4a6a7b",
+  45: "#de4a5a",
+  46: "#ffac62",
+  47: "#ee3131",
+  48: "#8b6aa4",
+  49: "#f6deff",
+  50: "#b4ac73",
+  51: "#c57341",
+  52: "#ffe683",
+  53: "#deb46a",
+  54: "#ffd54a",
+  55: "#8bacd5",
+  56: "#d5ac9c",
+  57: "#e6bd9c",
+  58: "#fff6a4",
+  59: "#d5a48b",
+  60: "#5283c5",
+  61: "#ffffff",
+  62: "#395a83",
+  63: "#ffe629",
+  64: "#d5bd08",
+  65: "#ffee18",
+  66: "#94bdbd",
+  67: "#bd9ce6",
+  68: "#838b94",
+  69: "#5a3900",
+  70: "#6ac552",
+  71: "#4aa47b",
+  72: "#6ab4e6",
+  73: "#6ab4e6",
+  74: "#9c9483",
+  75: "#b4b49c",
+  76: "#9c8b52",
+  77: "#e65a29",
+  78: "#ff9c18",
+  79: "#de627b",
+  80: "#e66a7b",
+  81: "#8bb4a4",
+  82: "#393131",
+  83: "#e6e6a4",
+  84: "#946a5a",
+  85: "#a47b5a",
+  86: "#d5cdee",
+  87: "#e6e6f6",
+  88: "#944a9c",
+  89: "#bd7bbd",
+  90: "#9c8bc5",
+  91: "#7b5283",
+  92: "#d5accd",
+  93: "#835a6a",
+  94: "#9473b4",
+  95: "#837b7b",
+  96: "#f6de00",
+  97: "#f6de00",
+  98: "#de524a",
+  99: "#c56a5a",
+  100: "#ff5220",
+  101: "#eeeeee",
+  102: "#ffd5ac",
+  103: "#73ac31",
+  104: "#946a5a",
+  105: "#946a52",
+  106: "#cda483",
+  107: "#cdb47b",
+  108: "#ee736a",
+  109: "#eed56a",
+  110: "#bd8bcd",
+  111: "#8383ac",
+  112: "#8b8b94",
+  113: "#ffd5d5",
+  114: "#417b94",
+  115: "#9c7b73",
+  116: "#6a94b4",
+  117: "#6a839c",
+  118: "#ffffff",
+  119: "#f6f6ff",
+  120: "#9c6a39",
+  121: "#5a529c",
+  122: "#104a73",
+  123: "#8bcd73",
+  124: "#f6315a",
+  125: "#c5a410",
+  126: "#ff4a31",
+  127: "#c5ac8b",
+  128: "#dea44a",
+  129: "#f66218",
+  130: "#208bac",
+  131: "#397ba4",
+  132: "#c57be6",
+  133: "#a4624a",
+  134: "#5ac5e6",
+  135: "#ffde52",
+  136: "#ffeea4",
+  137: "#0883a4",
+  138: "#9c836a",
+  139: "#399ccd",
+  140: "#c58329",
+  141: "#bd8b41",
+  142: "#9483a4",
+  143: "#f6e6bd",
+  144: "#6aacf6",
+  145: "#d5ac08",
+  146: "#ee6239",
+  147: "#ffffff",
+  148: "#5a8bee",
+  149: "#de7339",
+  150: "#ded5e6",
+  151: "#ffb4d5"
+};
+
+window.INSCRIPTIONS = {
+  1: { id: "275c913b0784451620fbb1ea7efdcabb261ff40bdbfd4955372cc8a580679f6di0", color: "#399494" },
+  2: { id: "54ea1a8ec52cc357c48d204fc16d5c99f1d6fc00533b30d62aab45e8b3454792i0", color: "#209483" },
+  3: { id: "94cf40cf6ff7e0a7bcc478079a6de9aae6ce4591e784d84f9c9147481bcce08ai0", color: "#20b49c" },
+  4: { id: "850e2cded01349d949e77e97190ad9ced517c5e57eb734fd6822b2fa68290114i0", color: "#ff9441" },
+  5: { id: "d9b15e04908f416076e4cd50ae0bf1a8915507c8b9fe9eba06da8c9cdf4a9abbi0", color: "#cd3939" },
+  6: { id: "2015abc664f627e703f4b57cdef0b487b72c83116b1d70ecebeb976c351de46ci0", color: "#ee8329" },
+  7: { id: "7c79dce4db8d501d239442e93db906fac0c7113d79d8d283e6cedc3c22821664i0", color: "#5a9ca4" },
+  8: { id: "6c443d92acc8a90f7660ad5502271cdefbb3eb24c2dbcd45072eecfc800224b5i0", color: "#8bacf6" },
+  9: { id: "5d68a6d3fd61a422a640cbfd22deee17aa2225bc0e70432f82c3f3cbdc050410i0", color: "#5a8bcd" },
+  10: { id: "0b1806d6d2a78a04ee0c794c87a28d7e4dbcf7663ef5a2537b1a8669461f88b4i0", color: "#31ac41" },
+  11: { id: "f910c723a7fada3e6c435278262b0149bdfeb2ada39a8d254801c963ea7d3b27i0", color: "#6a8b5a" },
+  12: { id: "f632b64e04f64cd2421d8a9cc57c0a38ab45ce0e2c3c2e36da3bad0de3f1f779i0", color: "#eeeeff" },
+  13: { id: "51834b386b62ef2132deaa385a18067c81757e8eee93456b58fde1beda9dc91bi0", color: "#cd7310" },
+  14: { id: "f0f902573851ac25683f730b24ade045e1f87ba15b0e55ae2b2ae442ebfb286fi0", color: "#cd9c10" },
+  15: { id: "188f797eb39838c3683c03da59cfee97143a6013a00a079e5d1b8c506742e39di0", color: "#ffffff" },
+  16: { id: "fe99baab6e466a68637fcca896720dc3ea003013ac9f54b184af29fbf04331a5i0", color: "#a4625a" },
+  17: { id: "d29f5f8ffe9fd4a25291c4e0508c266196cce30280681889ad93a451fcce273di0", color: "#ffe68b" },
+  18: { id: "7f1fc8656597f78a0998ca88e1b4b136dc0a6f07d2a4b764ca76e1f39c11e48bi0", color: "#e6b462" },
+  19: { id: "253e6c5cc3650bde09ca946b34fb2146ecdc56a7de3b042923c236715000a701i0", color: "#b473bd" },
+  20: { id: "c4fe118c6bbae4e243aa25f8142300975ab72f74bb869aa8d1a213de3bf970b6i0", color: "#a47329" },
+  21: { id: "62af5ae1934b4a2bd045ad162e869828f6943c7b654b1ee67cf37e19ecc0752bi0", color: "#ee524a" },
+  22: { id: "21e1f5874eac2b267408df75d1df8748bcf845d6cf5ceb19d9c11458d969c970i0", color: "#b47320" },
+  23: { id: "9bb14e00cb20b17fa1dd66001d2c44ea41dd9d207c6e04254b8f970015b3896fi0", color: "#cd62b4" },
+  24: { id: "84e597f6f82456612b39118da36b0bcb0df10e1b67c37b05bd88a7cdc172982ci0", color: "#a483c5" },
+  25: { id: "fa9a8d958caa744489e50666a427c7bbbe824f06422309bc62cf72554321df8ci0", color: "#f6e652" },
+  26: { id: "ba064f7439fc82b3048bf283562c9b6d56563d9c5cdce74b6a4ff93bb351c682i0", color: "#f6ac29" },
+  27: { id: "ade45f19a6417286791b98d18d6ce9cf33789dcec709fd4a463131a941518343i0", color: "#cdb400" },
+  28: { id: "bf68e7070caa46b5b7171b8e80d3f8475a8a71b608c51939f1f79ff20a4c5bcci0", color: "#8b6218" },
+  29: { id: "50de2b1e2e76032f9ce12a24c12f3e67e2828a73bc7671f216b930a56b4415cai0", color: "#d5d5ff" },
+  30: { id: "e2b068118aaa9f2c425b7a81320055116d5481d6463440051e7961601f8a1237i0", color: "#8bc5cd" },
+  31: { id: "b76c77d452bdd482ce221959e6246830f0aa473a2b7e23136964a2a5ed8ea785i0", color: "#628bac" },
+  32: { id: "2232fcfc60028bcede26977bf35119ab14f4a3639d46defd0ff660e70b4f39f0i0", color: "#bd62c5" },
+  33: { id: "4bec7f63e349e2daab585bd1aef4c39120a52c7918cb0b6671f9e06695b81556i0", color: "#945ab4" },
+  34: { id: "28d0fb8ed31abd66e73257b970beb49d9a12330d31dc9658103218ce0f5ac978i0", color: "#a45294" },
+  35: { id: "553b0b42a646968e174709ed9d02e1e10830212f56a562de4756bf3fdf612dedi0", color: "#ffd5bd" },
+  36: { id: "681eb0e2cf319f41e79033d6c47278e4a0cfd3dc7f7849ae419e41beeec34f19i0", color: "#ffc5b4" },
+  37: { id: "579def6fc82829a48b99fc20ef863c01f1abd4cef6bb7389c3d255d60ce47b81i0", color: "#e6946a" },
+  38: { id: "1331dade72df7507c638ac434fa21edeeb1cf138be0da5f57d021d3764789a40i0", color: "#e6c552" },
+  39: { id: "657d0f32bb1676c7b798638fe4d8dca30bfd610ae564ab40b23eb3760313189ei0", color: "#ffaca4" },
+  40: { id: "1f30cb8a8ce5d6042b78438a9acb0904462bf5d962d543c942b7fc04c37624ddi0", color: "#ffffff" },
+  41: { id: "0b8d4c809c64d3dfd60d76a3631246c741c09c490b296b43af614fb6ff4abb96i0", color: "#8bb4ee" },
+  42: { id: "2ac3c20e2a0c200a8c2efcb184e54aba5238c06fda6174ade0a24b05cf0bfb1ei0", color: "#ac52ac" },
+  43: { id: "9d9df90fb4aba2085a76c6edad551cad4e4cbcf3a2b6149186865c5ffb086b08i0", color: "#8bac31" },
+  44: { id: "10ce97b45008ee54ef612eccacd1106d2a723045e059001d3f16ae68db0f9ccfi0", color: "#4a6a7b" },
+  45: { id: "633dd440502684ed2e17bde6235d4b76934257399c7c025f733ea7f3e1a8be96i0", color: "#de4a5a" },
+  46: { id: "dd9002f3d48df21cc72d305bd1fb9981071b58199ce82183d04634de49f9cb30i0", color: "#ffac62" },
+  47: { id: "606cf83294c39bb0d5feac202a32b3303298c4fdfd30897a03de19a6ec5b66dbi0", color: "#ee3131" },
+  48: { id: "27fc4a4f876e5354d9ad28119d1678f1e6802b6ae38ae219427108ae1914858ai0", color: "#8b6aa4" },
+  49: { id: "0a2876812465024d63d0ad04bf494b92d494b00732427c5622fa1d3cee5fc73ei0", color: "#f6deff" },
+  50: { id: "d170485d2aabfa9ae2b391e1a7ffadc53ca6abf2f47ab6673955d827723df7e3i0", color: "#b4ac73" },
+  51: { id: "6bae3704bd9a1359af5da364c45b02495a5ed70ffc05d3be5d988f11c0c48d12i0", color: "#c57341" },
+  52: { id: "acc52bdf0e235651bc7eae8749c6434ffdaa8685ce18f882bdbfd2753fd4353bi0", color: "#ffe683" },
+  53: { id: "15a1f52db3292620c47331099e65decee1f6932022d2147b0af2ad411bec9ccai0", color: "#deb46a" },
+  54: { id: "61883c7fd804bd78ebd49ab32e0cb484a62e17a3fde6a35db420580869c55619i0", color: "#ffd54a" },
+  55: { id: "fc211436932925acad679dce0ef5eefca6764c2a415c2cf9ec5b80968beb8786i0", color: "#8bacd5" },
+  56: { id: "8ddfec60110f34ccb2e7c18e22e3ef1bf84e2d3f1be057621ae170113d58109di0", color: "#d5ac9c" },
+  57: { id: "f8fbd980965604b32f1c35b4c2ca364ce4afda344d41679f6630c0feda23e0b1i0", color: "#e6bd9c" },
+  58: { id: "8c1316085c521429fe9cbe02dee0253de7bdce7e67282e66d3172a6852dfe235i0", color: "#fff6a4" },
+  59: { id: "2b1f11004abe18e9c94b1f55e20d99855611d0d2b6eb829ffdeedf0cc40772e7i0", color: "#d5a48b" },
+  60: { id: "f1e297d7897cdbc5cd7f0a86bd50e92a446f09c20aa735480805532e709f0dc8i0", color: "#5283c5" },
+  61: { id: "c02d6d0d3648b09fed0884b8c9b9d9221015ef6ae792ce321246a892dc6f95bai0", color: "#ffffff" },
+  62: { id: "51b6decccfde83089f01690c96f090505b095e837d47a15d78c644e477cb5a12i0", color: "#395a83" },
+  63: { id: "15b4ac7d3a071ee946618cb308d5b6d2f122f1f371a2a047acd73a3f9b7a4836i0", color: "#ffe629" },
+  64: { id: "104e0c7df84b4cf8e8f4f996e9d682bf0071af79677bafe0208803ec6c32e54ci0", color: "#d5bd08" },
+  65: { id: "cb8eb27bda56d0ebf39d303f32ae3d2669e82e0a0d3968fab036e42061faf2f7i0", color: "#ffee18" },
+  66: { id: "0554b0ef8fb53b1f61695feee5b7c106f0d9296f13e5df09596e52d77de4b89ei0", color: "#94bdbd" },
+  67: { id: "16b2fed38bf7238e50a790c6d62771527bdcd977c17d063204851091654fc7b9i0", color: "#bd9ce6" },
+  68: { id: "fcbc4a09c5b4ccf17af2daf1659042729fea58e17acf3fe325ea087ce41f787ai0", color: "#838b94" },
+  69: { id: "d651a7a543d28dd2c976fc61ff273be5f9eb5b4910ad9a3c02c7b15579d2da51i0", color: "#5a3900" },
+  70: { id: "c01e0cfe9c114b334471d7bfda1a3c3bdb8b91b49250f97f6a5aa7dceda931f4i0", color: "#6ac552" },
+  71: { id: "1fc504251fef2a9711cadb59cdf3ab824351be3defdef97aecf7f0593bd08764i0", color: "#4aa47b" },
+  72: { id: "49546536422406aaa4cb3cd9d00fbb4af4547102133eda3350f296a916d33e15i0", color: "#6ab4e6" },
+  73: { id: "82c074c24473c41eec8cb86c4ec4e62017cc88aece4188d2211a87a7da569238i0", color: "#6ab4e6" },
+  74: { id: "9843aee8087d5a4f8ee147c3de1d8d586048e4dfe8c7cece9f83cde7b11a412bi0", color: "#9c9483" },
+  75: { id: "b86cf6c31c27ca94319e8d7162afe9c76d0ee6ff3f6c98ef30bb7599caa4c77bi0", color: "#b4b49c" },
+  76: { id: "6d01b25e8f1502757c68861991f200503f32b698bed60cce909a71daa533dc96i0", color: "#9c8b52" },
+  77: { id: "39e3758aec78c1fc9a68269f1cb8d9f63d1522a91c97cdcbc5e37a055e490514i0", color: "#e65a29" },
+  78: { id: "d10d12efb7ce5c92a1924a6da22e2a5db3cdc90867723b54b42cdb3c3fff516bi0", color: "#ff9c18" },
+  79: { id: "3dab465febaa78cbf954769d7dec7cbef8df9b093502900d39d93574500d23c9i0", color: "#de627b" },
+  80: { id: "35ba7a43bb8ecb1a740cecffe7b5717a933c17f14ad4c8d2adf4b898e3a24d00i0", color: "#e66a7b" },
+  81: { id: "d7d0bf81d96bd82e1d7b634b84d4bccd1a4cc5dc033e362ed96e585382842b4bi0", color: "#8bb4a4" },
+  82: { id: "7e7e57273bd24c379a3de84c7c519054c3077d39b983bed92fc0ec1d4c5bf8dbi0", color: "#393131" },
+  83: { id: "676cfe8b25d36aad23da2d8735fe0a7f6c70d69ee4c604d94e62e77d3ed0b729i0", color: "#e6e6a4" },
+  84: { id: "bbcd93e8e25ca31494c27824c0396ba0d9a23e66e53e1fc2c309af6b1dda7b36i0", color: "#946a5a" },
+  85: { id: "ea88b78843299b2f1a820edb5d42283d8493252f02609a70bb03a8d34ac7eca0i0", color: "#a47b5a" },
+  86: { id: "bc7d82c9f7c17fb62a885b6f179935a720c7dbe3049e9391216d1400ed8f7d0ci0", color: "#d5cdee" },
+  87: { id: "5dd6987fae4e4eff7a1de72b8dd90f1b8666df11f25915a84f61b76ee2304362i0", color: "#e6e6f6" },
+  88: { id: "1a1e3c5a99193c81f0e8a59412495721acc59dfdb22e0dbfe846c05a0e5d3233i0", color: "#944a9c" },
+  89: { id: "add075a90af3951bbd6e6dcce736c1645a6a8e19cba416b717866b919f8288e0i0", color: "#bd7bbd" },
+  90: { id: "816da3d1451fc62348a6babb9809737955d41f53efefa188d87bb7ec67e8bc75i0", color: "#9c8bc5" },
+  91: { id: "cbb58df2756dd910d939760cdf94b6747152bde24f14285ce9cfc02e793532a5i0", color: "#7b5283" },
+  92: { id: "ae187c0cec0239ba9c490b0a7b9656d9ceaf1b887388d5186c39ac2d5ef1186ci0", color: "#d5accd" },
+  93: { id: "139bfc8cf93632aced904678e6e3087a1ee23ae936c623857d31ac10ab152d96i0", color: "#835a6a" },
+  94: { id: "84c70de7620c8b43252b23c9e7c17b0adecfe92319c2670cb254912b93e0d495i0", color: "#9473b4" },
+  95: { id: "5bca1b9bc33eaf4d66e37b846bcc69d3a22a1db00d4bbe6483d54cbf7e431f82i0", color: "#837b7b" },
+  96: { id: "14200977fd7578393ee0153cb11f68d4edb730a59f21502bdc8374a0b40d37c5i0", color: "#f6de00" },
+  97: { id: "d909cffab145b7bfde05d87df63b7a195bd1ae208f352844c9d6c394c0361867i0", color: "#f6de00" },
+  98: { id: "3cfd1c35229adeb12231af997d7f395d184b1a4d4fe1231917ea5635eef1ba1fi0", color: "#de524a" },
+  99: { id: "bcd80d08a41ad29b46ccc416a75fff3a2e7a2300a96195e358aba030aa135bb0i0", color: "#c56a5a" },
+  100: { id: "448c9e48a3cd9f25915b365d1c9923b276c9e826394e1513cff7dfcd002b6ed9i0", color: "#ff5220" },
+  101: { id: "74e7b5517f6ab25f3a9070ec224f13fc169fe1da4b0abe3a5b9b3eb61464a122i0", color: "#eeeeee" },
+  102: { id: "acbd9e94d6fc4bb08d9301494d7c3ca546b2cd244efb22524080aa93feeee9f6i0", color: "#ffd5ac" },
+  103: { id: "47b4f76eb7496a96a5e6e8f7a41e964cd17b5d687c2d9198194ab29f51687a3bi0", color: "#73ac31" },
+  104: { id: "0701459e857e52c67e1cb74dc6eb68018379519c09b7aae026d9e3862ef0796fi0", color: "#946a5a" },
+  105: { id: "6a638a04f305495ed744757e353c264a598996c051de331d3def918bdb86ae84i0", color: "#946a52" },
+  106: { id: "57fdae935644e42708ed8b4627c4a4bd547a0b343beb4e1e31e6283af7106356i0", color: "#cda483" },
+  107: { id: "e70eaa083e4ee5ae66717ca5a328d1d9158567523614addc80b85fdeb370f116i0", color: "#cdb47b" },
+  108: { id: "190b145c1fb04c10fbed1b18f8f1ece09ce1e06ff0f6e8e78f8b28ce34c2006bi0", color: "#ee736a" },
+  109: { id: "d1d5fa56db09c469b3105a3e5842bc121c79daa2f06eec2b7952248afaf5be1fi0", color: "#eed56a" },
+  110: { id: "a471b669cad6532d3b87870a714f65f47bb9f79d766ca097d65eb1814fa2658ai0", color: "#bd8bcd" },
+  111: { id: "f9aae84cc06860e022bcc4407405ef139d87ef711548bc7fd42bbd1981d298cbi0", color: "#8383ac" },
+  112: { id: "6cbd3fe55b87059516a118bc1be59bad4e41504036af83ad4f7dbcc24c831c67i0", color: "#8b8b94" },
+  113: { id: "fd6d7f8874676875eea9d066fddc681f192ca4aea3bd8416df3b0151019d515ci0", color: "#ffd5d5" },
+  114: { id: "6cbe942d0531c6834a11b3efdcabc21d9e2ef5750672c5ef0a18cd6f3c312d79i0", color: "#417b94" },
+  115: { id: "0711f3c706b419ba1383dfccd09948268bced77a56ec44f2fba7722ed1db9d32i0", color: "#9c7b73" },
+  116: { id: "3992c53b079958210fd036b2553120cdd32a25e4aa25d54ea105e46f713f5050i0", color: "#6a94b4" },
+  117: { id: "7f8b0b8ea824f449638fa9d7c0ce83cf796758d9decfb756627fcc0832d4e6bei0", color: "#6a839c" },
+  118: { id: "637a7c45b6a7b982e965c4581a70df6346d5359ab265a90122b22f5e536b612ei0", color: "#ffffff" },
+  119: { id: "544a68402460efba7207b1ac4bb17f95d4dfbe3e0182b055f02445fbd05f1199i0", color: "#f6f6ff" },
+  120: { id: "af9e958e19244ef5f5dbd3efadd2bcacc74505f1edbaaf1314e1c3080e164f8ai0", color: "#9c6a39" },
+  121: { id: "12c804f324952634b9243236b717ed0086903a688f58fdeee9dcc23f36da9584i0", color: "#5a529c" },
+  122: { id: "a4574e75be1951f260c404419878a42762c2b9c6dff6a54079330c1ebf68ed1fi0", color: "#104a73" },
+  123: { id: "24466ad7abdfbfd5f0600bd02a64c5cfd71593436f10dfa74804ff8787c86e0fi0", color: "#8bcd73" },
+  124: { id: "df7cc7b97a4a35f03b9579b3ed72c0498ad72af116c682a0a8ce55113530dfa5i0", color: "#f6315a" },
+  125: { id: "b663d88098da7281691b29267f32715ff6cdf40f322aede031773c0bb346a977i0", color: "#c5a410" },
+  126: { id: "0b5597d73fa40495f070f2ca4808366d9f2221936cbc3579b3759f368be0771fi0", color: "#ff4a31" },
+  127: { id: "2e0020fc2c87f3a6a04c449c6cfd85cf504789203d258ab32969fc80dd49aa8ai0", color: "#c5ac8b" },
+  128: { id: "ddcf87f289a4f234dcd25f6493cb5a0947cdd9b35dcf412472d12b7653f779d2i0", color: "#dea44a" },
+  129: { id: "809a44b049b8a7c6cd9128422ffd99faa9d3254d9a87aa70e0db6eb7deb1ff9ei0", color: "#f66218" },
+  130: { id: "b429b659a5a152c5428330d3526c829b280cb2076126d72fb1a0e412a4db047ci0", color: "#208bac" },
+  131: { id: "400ccaf744123ba3e859d012cfded79fab079a2710477b6ebf759207129a4b2ei0", color: "#397ba4" },
+  132: { id: "957b167d21cb5c65d68ca1ea0a7d3724b06df4d2532c1016d254ddd3f5d87813i0", color: "#c57be6" },
+  133: { id: "90c3b2b23cfe4ddb973fb9386d6dbe3d0f9fc262449af25a6a3a1a1480915afci0", color: "#a4624a" },
+  134: { id: "bd015c9c618313634430554e5664c7875cadd1e48f16c239390c4dd4d8eb29d8i0", color: "#5ac5e6" },
+  135: { id: "97a4a72e64cd3eb5b5b1365e3abf1589058869e5b193d70086ded6b35442d44bi0", color: "#ffde52" },
+  136: { id: "ef3af79e045ccd1f9c844ea0d87dd91c80f5c9a82576e0bfabd3f6e74e7815c6i0", color: "#ffeea4" },
+  137: { id: "021dce8c0203fec25fa090fb4f359c3d7fac612c8a92fa659613e02956314dbei0", color: "#0883a4" },
+  138: { id: "f30995a9590c17dc0419d805cf420b795137ccef97b16808a59bc8c1f5e015d5i0", color: "#9c836a" },
+  139: { id: "fcf6fb558c3663bf5119a8bc8f980de2d4f81f059cd71ae635470d7579aa6f77i0", color: "#399ccd" },
+  140: { id: "d5521ee4bdb6fded099cf4c601155683c4cf0d3dc8774f2e02a51c11c8c10638i0", color: "#c58329" },
+  141: { id: "a3aa7cfb46950c52a5a00d6a99a7f2a0b040cef61df3b0f080b7f3a25f3ae105i0", color: "#bd8b41" },
+  142: { id: "d46d4d86cd943d873bacaabfab54b201d4fbb60602ef5bb0c5ccb538d75e6e75i0", color: "#9483a4" },
+  143: { id: "32fcc4d83499feb964ac2cae72721cab1ef16d599d7368809f9b67145d8db25ei0", color: "#f6e6bd" },
+  144: { id: "0f9512f526fc696890c2057676f06714b293b96eb316bbafc76a5b25a7ad20a1i0", color: "#6aacf6" },
+  145: { id: "d3f891584d3624c42e95807ed29fc0b8545081d2fcd7d6cbeeea6e763fe63f83i0", color: "#d5ac08" },
+  146: { id: "7a5308efa408e84aa3466e23c5ebac6f3ca4db822412add261751179c99d07c2i0", color: "#ee6239" },
+  147: { id: "df660aac08481427ff023d51b5dc0303943e9d216c0a84936f5a14132184f59fi0", color: "#ffffff" },
+  148: { id: "b46e947a65dd34b2818fce8a3024c15de053bd1e562739e5680feaf189cdad15i0", color: "#5a8bee" },
+  149: { id: "27071c858f6b68d6c993383290902112681da79b86c5f5c25d0a37cbf0d5d5a4i0", color: "#de7339" },
+  150: { id: "f1a047f03cbca4e6408e4db974223e892d8c889ca315c1f5461192599f7d5838i0", color: "#ded5e6" },
+  151: { id: "7f2060d30160f1ee62b21707f8829de289f2969eb35ce291d2ef0ddf21e0606ei0", color: "#ffb4d5" }
+};
+
+window.COLLECTION = {
+  chain: "Bitcoin",
+  protocol: "Ordinals",
+  total: 151,
+  uniqueColors: 144,
+  inscrLow: 194259,
+  inscrHigh: 195670
+};
+
+// ordinals explorer page for a ball
+window.inscriptionUrl = function (n) {
+  const e = window.INSCRIPTIONS[n];
+  return e && e.id ? "https://ordinals.com/inscription/" + e.id : null;
+};
+// raw byte-perfect on-chain image content (used for specimens not in the local export)
+window.inscriptionContent = function (n) {
+  const e = window.INSCRIPTIONS[n];
+  return e && e.id ? "https://ordinals.com/content/" + e.id : null;
+};
+window.shortId = function (n) {
+  const e = window.INSCRIPTIONS[n];
+  if (!e || !e.id) return "";
+  return e.id.slice(0, 6) + "…" + e.id.slice(-6);
+};
+</script>
+
+<!-- The app (JSX, transpiled in-browser by Babel) -->
+<script type="text/babel">
+/* global React, ReactDOM, extractDomeColor, colorSortKey, contrastInk, COLLECTION */
+const { useState, useEffect, useMemo, useRef } = React;
+
+const ALL = Array.from({ length: 151 }, (_, i) => i + 1);
+const AVAIL = ALL;                          // all 151 are inscribed on-chain
+const NO_LOCAL = new Set([53]);             // absent from local export → served byte-perfect from chain
+const pad = (n) => String(n).padStart(3, '0');
+const artSrc = (n) =>
+  (window.SPRITES && window.SPRITES[n])
+    ? window.SPRITES[n]
+    : (NO_LOCAL.has(n) ? window.inscriptionContent(n) : `images/${n}.png`);
+
+// Settings baked in from the configuration chosen in the editor. This is a
+// static build: there is no Tweaks panel and these values cannot be changed
+// at runtime.
+const SETTINGS = {
+  theme: "dark",
+  flipbook: "flicker",
+  tempo: 1,
+  order: "dex",
+  labels: "name",
+  tile: 132,
+  heroScale: 440,
+  accent: "#f5b13d",
+  glow: true,
+  scan: true,
+};
+
+/* colors come straight from the inscription sheet — authoritative + instant */
+
+/* --------------------------------------------------------------- CSS ball */
+function CssBall({ color, size }) {
+  const band = Math.max(3, size * 0.11);
+  const btn = size * 0.26;
+  const ring = Math.max(3, size * 0.035);
+  return (
+    <div className="cssball" style={{ width: size, height: size }}>
+      <div className="cb-top" style={{ background: color, height: size / 2 }} />
+      <div className="cb-bot" style={{ height: size / 2 }} />
+      <div className="cb-band" style={{ height: band, top: size / 2 - band / 2 }} />
+      <div className="cb-btn" style={{
+        width: btn, height: btn, left: size / 2 - btn / 2, top: size / 2 - btn / 2,
+        borderWidth: ring
+      }} />
+    </div>
+  );
+}
+
+/* ------------------------------------------------------------------- hero */
+function FlipbookHero({ t, colors, ready }) {
+  const seq = useMemo(() => {
+    if (t.order === 'spectrum' && ready) {
+      return [...AVAIL].sort((a, b) => colorSortKey(colors[a]) - colorSortKey(colors[b]));
+    }
+    return AVAIL;
+  }, [t.order, ready, colors]);
+
+  const [cur, setCur] = useState(0);
+  useEffect(() => { setCur(0); }, [t.flipbook, t.order]);
+
+  useEffect(() => {
+    if (t.flipbook === 'filmstrip' || !seq.length) return;
+    const base = t.flipbook === 'flicker' ? 70 : t.flipbook === 'fade' ? 620 : 520;
+    const ms = Math.max(28, base * (5 / t.tempo));
+    const id = setInterval(() => setCur((c) => (c + 1) % seq.length), ms);
+    return () => clearInterval(id);
+  }, [t.flipbook, t.tempo, seq]);
+
+  const num = seq[cur] || AVAIL[0];
+  const color = colors[num] || '#8a8a99';
+  const S = t.heroScale;
+
+  return (
+    <section className="hero">
+      <div
+        className="hero-glow"
+        style={{
+          background: t.glow ? `radial-gradient(closest-side, ${color}cc, ${color}00 72%)` : 'transparent',
+          transition: t.flipbook === 'morph' ? 'background .5s linear'
+            : t.flipbook === 'fade' ? 'background .45s ease' : 'none'
+        }}
+      />
+      <div className="hero-stage" style={{ width: S, height: S }}>
+        {t.flipbook === 'morph' && <CssBall color={color} size={S} />}
+        {(t.flipbook === 'flicker') && (
+          <img className="px hero-sprite" src={artSrc(num)} alt="" style={{ width: S, height: S }} />
+        )}
+        {(t.flipbook === 'fade') && (
+          <img key={num} className="px hero-sprite fadein" src={artSrc(num)} alt="" style={{ width: S, height: S }} />
+        )}
+        {t.flipbook === 'filmstrip' && (
+          <div className="strip-window" style={{ width: S * 1.15, height: S }}>
+            <div className="strip-track">
+              {[...seq, ...seq].map((n, i) => (
+                <img key={i} className="px" src={artSrc(n)} alt="" style={{ width: S * 0.62, height: S * 0.62 }} />
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+
+      <div className="readout">
+        {t.flipbook === 'filmstrip' ? (
+          <React.Fragment>
+            <div className="ro-num">ALL · 151</div>
+            <div className="ro-name">continuous reel</div>
+            <div className="ro-hex" style={{ color: t.accent }}>151 Inscriptions looping</div>
+          </React.Fragment>
+        ) : (
+          <React.Fragment>
+            <div className="ro-num">SPECIMEN</div>
+            <div className="ro-name">№ {pad(num)}</div>
+            <div className="ro-hex">
+              <span className="chip" style={{ background: color }} />
+              {(color || '').toUpperCase()}
+            </div>
+          </React.Fragment>
+        )}
+      </div>
+    </section>
+  );
+}
+
+/* --------------------------------------------------------------- spectrum */
+function Spectrum({ colors, ready, onPick }) {
+  const ordered = useMemo(() => {
+    if (!ready) return AVAIL;
+    return [...AVAIL].sort((a, b) => colorSortKey(colors[a]) - colorSortKey(colors[b]));
+  }, [ready, colors]);
+  return (
+    <div className="spectrum" role="list" aria-label="All 151 colors, sorted by hue">
+      {ordered.map((n) => (
+        <button
+          key={n}
+          className="spec-stripe"
+          style={{ background: colors[n] || '#222' }}
+          title={`№${pad(n)}  ${(colors[n] || '').toUpperCase()}`}
+          onClick={() => onPick(n)}
+        />
+      ))}
+    </div>
+  );
+}
+
+/* ------------------------------------------------------------------ atlas */
+function Tile({ n, t, colors, onOpen }) {
+  const color = colors[n] || '#3a3a44';
+  const onChain = NO_LOCAL.has(n);
+  return (
+    <button
+      className="tile"
+      style={{ minHeight: t.tile, '--c': color, boxShadow: t.glow ? undefined : 'none' }}
+      onClick={() => onOpen(n)}
+      title={onChain ? 'served byte-perfect from Bitcoin' : undefined}
+    >
+      {onChain && <span className="tile-chain" title="rendered from the on-chain inscription">⛓</span>}
+      <div className="tile-art">
+        <img className="px" src={artSrc(n)} alt={`№ ${pad(n)}`} style={{ width: t.tile * 0.52, height: t.tile * 0.52 }} />
+      </div>
+      {t.labels !== 'none' && (
+        <div className="tile-meta">
+          <span className="t-name">№ {pad(n)}</span>
+          {t.labels === 'full' && <span className="t-hex" style={{ color }}>{color.toUpperCase()}</span>}
+        </div>
+      )}
+    </button>
+  );
+}
+
+function Atlas({ t, colors, ready, onOpen }) {
+  const seq = useMemo(() => {
+    if (t.order === 'spectrum') {
+      return [...ALL].sort((a, b) => colorSortKey(colors[a]) - colorSortKey(colors[b]));
+    }
+    return ALL;
+  }, [t.order, colors]);
+  return (
+    <div className="atlas" style={{ gridTemplateColumns: `repeat(auto-fill, minmax(${t.tile}px, 1fr))` }}>
+      {seq.map((n) => <Tile key={n} n={n} t={t} colors={colors} onOpen={onOpen} />)}
+    </div>
+  );
+}
+
+/* --------------------------------------------------------------- lightbox */
+function Lightbox({ n, colors, onClose, onNav }) {
+  useEffect(() => {
+    const k = (e) => {
+      if (e.key === 'Escape') onClose();
+      if (e.key === 'ArrowRight') onNav(1);
+      if (e.key === 'ArrowLeft') onNav(-1);
+    };
+    window.addEventListener('keydown', k);
+    return () => window.removeEventListener('keydown', k);
+  }, [onClose, onNav]);
+  if (!n) return null;
+  const color = colors[n] || '#8a8a99';
+  const url = window.inscriptionUrl(n);
+  return (
+    <div className="lb" onClick={onClose}>
+      <div className="lb-card" onClick={(e) => e.stopPropagation()}>
+        <button className="lb-arrow left" onClick={() => onNav(-1)} aria-label="Previous">‹</button>
+        <div className="lb-body">
+          <div className="lb-art" style={{ background: `radial-gradient(closest-side, ${color}55, transparent 70%)` }}>
+            <img className="px" src={artSrc(n)} alt={`№ ${pad(n)}`} />
+          </div>
+          <div className="lb-info">
+            <div className="lb-num">SPECIMEN</div>
+            <div className="lb-name">№ {pad(n)} <span className="dim" style={{ fontWeight: 400, fontSize: '0.55em' }}>/ 151</span></div>
+            <div className="lb-swatch-row">
+              <span className="lb-swatch" style={{ background: color }} />
+              <div>
+                <div className="lb-hex">{color.toUpperCase()}</div>
+                <div className="lb-sub">official dome color</div>
+              </div>
+            </div>
+            <div className="lb-insc">
+              <span className="lb-insc-k">INSCRIPTION</span>
+              <span className="lb-insc-v">{window.shortId(n)}</span>
+            </div>
+            <p className="lb-blurb">
+              № {pad(n)} reduced to a single defining hue — inscribed byte-perfect
+              onto Bitcoin.
+            </p>
+            <a className="lb-chain" href={url} target="_blank" rel="noopener noreferrer">
+              View inscription on-chain <span aria-hidden="true">↗</span>
+            </a>
+          </div>
+        </div>
+        <button className="lb-arrow right" onClick={() => onNav(1)} aria-label="Next">›</button>
+        <button className="lb-close" onClick={onClose} aria-label="Close">✕</button>
+      </div>
+    </div>
+  );
+}
+
+/* -------------------------------------------------------------------- app */
+function App() {
+  const t = SETTINGS;
+  const colors = window.DOME_COLORS;
+  const ready = true;
+  const [lb, setLb] = useState(null);
+
+  useEffect(() => {
+    document.documentElement.dataset.theme = t.theme;
+    document.documentElement.style.setProperty('--accent', t.accent);
+    document.documentElement.style.setProperty('--scan', t.scan ? '1' : '0');
+  }, [t.theme, t.accent, t.scan]);
+
+  const nav = (dir) => {
+    setLb((cur) => {
+      if (!cur) return cur;
+      let i = AVAIL.indexOf(cur);
+      if (i === -1) { // currently on missing; jump near
+        const near = AVAIL.filter((x) => x < cur).pop() || AVAIL[0];
+        i = AVAIL.indexOf(near);
+      }
+      const ni = (i + dir + AVAIL.length) % AVAIL.length;
+      return AVAIL[ni];
+    });
+  };
+
+  return (
+    <div className="page">
+      <header className="masthead">
+        <div className="mast-left">
+          <div className="wordmark">CAPSULES</div>
+          <div className="tagline">An art project representing the original 151 — each creature distilled to a single color,
+            then inscribed <em>byte-perfect</em> on Bitcoin. 151 capsules, 151 colors, 151 Inscriptions.</div>
+        </div>
+        <div className="stats">
+          <div className="stat"><b>151</b><span>specimens</span></div>
+          <div className="stat"><b>{COLLECTION.uniqueColors}</b><span>unique hues</span></div>
+          <div className="stat wide">
+            <b>#{COLLECTION.inscrLow.toLocaleString()}–{COLLECTION.inscrHigh.toLocaleString()}</b>
+            <span>inscriptions · bitcoin</span>
+          </div>
+          <div className="stat"><b style={{ color: 'var(--accent)' }}>BTC</b><span>byte-perfect</span></div>
+        </div>
+      </header>
+
+      <FlipbookHero t={t} colors={colors} ready={ready} />
+
+      <div className="band-label">
+        <span>THE SPECTRUM</span>
+        <span className="dim">151 dome colors, sorted by hue · click to inspect</span>
+      </div>
+      <Spectrum colors={colors} ready={ready} onPick={setLb} />
+
+      <div className="band-label">
+        <span>THE ATLAS</span>
+        <span className="dim">{t.order === 'spectrum' ? 'ordered by color' : 'national dex order'} · click any specimen</span>
+      </div>
+      <Atlas t={t} colors={colors} ready={ready} onOpen={setLb} />
+
+      <footer className="foot">
+        <span className="wordmark sm">CAPSULES</span>
+        <span className="dim">A color study of all 151 — inscribed byte-perfect on Bitcoin.</span>
+      </footer>
+
+      <Lightbox n={lb} colors={colors} onClose={() => setLb(null)} onNav={nav} />
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body>
+</html>
