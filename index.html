@@ -612,7 +612,7 @@ const { useState, useEffect, useMemo, useRef } = React;
 
 const ALL = Array.from({ length: 151 }, (_, i) => i + 1);
 const AVAIL = ALL;                          // all 151 are inscribed on-chain
-const NO_LOCAL = new Set([53]);             // absent from local export → served byte-perfect from chain
+const NO_LOCAL = new Set([]);               // all sprites available locally in images/
 const pad = (n) => String(n).padStart(3, '0');
 const artSrc = (n) =>
   (window.SPRITES && window.SPRITES[n])
