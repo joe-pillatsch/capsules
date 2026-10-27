@@ -2,13 +2,13 @@
 <html lang="en" data-theme="dark">
 <head>
 <meta charset="utf-8" />
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data: blob:; connect-src 'self'; base-uri 'none'; form-action 'none'" />
+<meta name="referrer" content="no-referrer" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Capsules — An Atlas of 151 Colors</title>
 <link rel="icon" type="image/svg+xml" href="favicon.svg" />
 <link rel="icon" type="image/png" sizes="32x32" href="favicon.png" />
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+<link href="fonts/fonts.css" rel="stylesheet" />
 <style>
 :root{
   --accent:#e8513a; --scan:1;
@@ -180,10 +180,11 @@ html[data-theme="light"] body::after{mix-blend-mode:normal;opacity:calc(var(--sc
 <body>
 <div id="root"></div>
 
-<!-- React + Babel from CDN. Babel transpiles the JSX in the <script type="text/babel"> below at load. -->
-<script src="https://unpkg.com/react@18.3.1/umd/react.development.js"></script>
-<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js"></script>
-<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js"></script>
+<!-- React 18.3.1 + Babel standalone 7.29.0, vendored from unpkg so no third party sees visitors.
+     Babel transpiles the JSX in the <script type="text/babel"> below at load. -->
+<script src="vendor/react.production.min.js"></script>
+<script src="vendor/react-dom.production.min.js"></script>
+<script src="vendor/babel.min.js"></script>
 
 <!-- Data + helpers (plain JS, attach to window) -->
 <script>
